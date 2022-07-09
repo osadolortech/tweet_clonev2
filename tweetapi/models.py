@@ -23,19 +23,19 @@ class TweetModel(models.Model):
 
 
 class CommentModel(models.Model):
-    owner = models.ForeignKey(User,on_delete=models.CASCADE, related_name="comment")
-    tweet = models.ForeignKey(TweetModel,related_name="comment",on_delete=models.CASCADE)
+    owner = models.ForeignKey(User,on_delete=models.CASCADE, related_name="comments")
+    tweet = models.ForeignKey(TweetModel,related_name="comments",on_delete=models.CASCADE)
     content = models.CharField(max_length=160)
     created_date = models.DateTimeField(auto_now=True)
 
 class LikeModel(models.Model):
-    owner = models.ForeignKey(User,on_delete=models.CASCADE,related_name="like")
-    tweet = models.ForeignKey(TweetModel,on_delete=models.CASCADE,related_name="like")
+    owner = models.ForeignKey(User,on_delete=models.CASCADE,related_name="likes")
+    tweet = models.ForeignKey(TweetModel,on_delete=models.CASCADE,related_name="likes")
     created_date = models.DateTimeField(auto_now_add=True)
 
 
 class RetweetModel(models.Model):
-    owner = models.ForeignKey(User,on_delete=models.CASCADE,related_name="retweet")
-    tweet = models.ForeignKey(TweetModel,on_delete=models.CASCADE,related_name="retweet")
+    owner = models.ForeignKey(User,on_delete=models.CASCADE,related_name="retweets")
+    tweet = models.ForeignKey(TweetModel,on_delete=models.CASCADE,related_name="retweets")
     created_date= models.DateTimeField(auto_now_add=True)
     

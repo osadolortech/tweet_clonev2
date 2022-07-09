@@ -7,8 +7,8 @@ class ProfileModel(models.Model):
     first_name = models.CharField(max_length=120,blank=True)
     last_name = models.CharField(max_length=120,blank=True)
     username = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user')
-    Bio = models.CharField(max_length=150)
-    Location = models.CharField(max_length=60)
+    bio = models.CharField(max_length=150)
+    location = models.CharField(max_length=60)
     birth_date = models.DateField(editable=True)
 
 

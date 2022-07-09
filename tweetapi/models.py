@@ -9,7 +9,7 @@ class ProfileModel(models.Model):
     username = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user')
     Bio = models.CharField(max_length=150)
     Location = models.CharField(max_length=60)
-    Birth_date = models.DateField(editable=True)
+    birth_date = models.DateField(editable=True)
 
 
 class TweetModel(models.Model):
@@ -19,6 +19,7 @@ class TweetModel(models.Model):
 
     def __str__(self):
         return self.content
+
 
         
 

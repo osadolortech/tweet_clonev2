@@ -14,11 +14,11 @@ class ProfileSerilizer(serializers.ModelSerializer):
 class TweetSerializer(serializers.ModelSerializer):
     comments = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     likes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-    retweets = serializers.PrimaryKeyRelatedField(many=True)
+    retweets = serializers.PrimaryKeyRelatedField(many=True,read_only= True)
     class Meta:
         model = TweetModel
         fields = (
-            "id","owner","content","created_date","comments","likes","retweets","nimber_of_likes","number_of_retweets"
+            "id","owner","content","created_date","comments","likes","retweets","number_of_likes","number_of_retweets"
         )
 
 class CommentSerializer(serializers.ModelSerializer):

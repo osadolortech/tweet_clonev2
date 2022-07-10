@@ -1,0 +1,43 @@
+
+from rest_framework import serializers
+from .models import ProfileModel, TweetModel,LikeModel,RetweetModel,CommentModel
+
+
+class ProfileSerilizer(serializers.ModelSerializer):
+    class Meta:
+        model = ProfileModel
+        fields = (
+            "id","username","first_name","last_name","bio","location","birth_date"
+        )
+
+
+class TweetSerializer(serializers.ModelSerializer):
+    comments = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
+    likes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    retweets = serializers.PrimaryKeyRelatedField(many=True)
+    class Meta:
+        model = TweetModel
+        fields = (
+            "id","owner","content","created_date","comments","likes","retweets"
+        )
+
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CommentModel
+        fields = (
+            "id","owner","tweet","content","created_date"
+        )
+
+class LikeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = LikeModel
+        fields = (
+            "id","owner","tweet","created_date"
+        )
+
+class RetweetSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RetweetModel
+        fields = (
+            "id","owner","tweet","created_date"
+        )

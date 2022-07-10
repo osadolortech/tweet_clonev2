@@ -1,7 +1,5 @@
-
 from rest_framework import serializers
 from .models import ProfileModel, TweetModel,LikeModel,RetweetModel,CommentModel
-
 
 class ProfileSerilizer(serializers.ModelSerializer):
     class Meta:
@@ -12,6 +10,7 @@ class ProfileSerilizer(serializers.ModelSerializer):
 
 
 class TweetSerializer(serializers.ModelSerializer):
+
     comments = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     likes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     retweets = serializers.PrimaryKeyRelatedField(many=True)
@@ -40,4 +39,3 @@ class RetweetSerializer(serializers.ModelSerializer):
         model = RetweetModel
         fields = (
             "id","owner","tweet","created_date"
-        )

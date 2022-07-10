@@ -20,6 +20,13 @@ class TweetModel(models.Model):
     def __str__(self):
         return self.content
 
+    @property
+    def number_of_likes(self):
+        return LikeModel.objects.filter(tweet=self).count()
+        
+    @property
+    def number_of_retweets(self):
+        return RetweetModel.objects.filter(tweet=self).count()
 
 
 class CommentModel(models.Model):

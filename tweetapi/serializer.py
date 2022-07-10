@@ -18,7 +18,7 @@ class TweetSerializer(serializers.ModelSerializer):
     class Meta:
         model = TweetModel
         fields = (
-            "id","owner","content","created_date","comments","likes","retweets","nimber_of_likes","number_of_retweets"
+            "id","owner","content","created_date","comments","likes","retweets","number_of_likes","number_of_retweets"
         )
 
 class CommentSerializer(serializers.ModelSerializer):

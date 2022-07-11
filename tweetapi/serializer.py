@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField
     class Meta:
         model = User
         fields = (

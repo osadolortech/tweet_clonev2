@@ -16,7 +16,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
         extra_kwargs= {"first_name":{'required':True}, "last_name":{'required':True}}
     def validate(self, attrs):
         if attrs["password"] != attrs["password_confirmation"]:
-            raise serializers.ValidationError({"password": "password filed didnt match"})
+            raise serializers.ValidationError({"password": "password fields didnt match"})
         return attrs
     def create(self, validated_data):
         user = User.objects.create(

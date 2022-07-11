@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-=======
-
->>>>>>> 800fb134c7772451f6ec2b73003829644bc19a6f
 from rest_framework import serializers
 from .models import ProfileModel, TweetModel,LikeModel,RetweetModel,CommentModel
 from django.contrib.auth.models import User

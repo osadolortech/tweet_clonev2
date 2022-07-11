@@ -1,14 +1,14 @@
-
 from rest_framework import serializers
 from .models import ProfileModel, TweetModel,LikeModel,RetweetModel,CommentModel
 from django.contrib.auth.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField
     class Meta:
         model = User
         fields = (
-            "id","username"
+            "id","username","password"
         )
 
 class ProfileSerilizer(serializers.ModelSerializer):
@@ -33,7 +33,7 @@ class TweetSerializer(serializers.ModelSerializer):
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = CommentModel
-        fields = (
+        fields =(
             "id","owner","tweet","content","created_date"
         )
 
@@ -49,3 +49,4 @@ class RetweetSerializer(serializers.ModelSerializer):
         model = RetweetModel
         fields = (
             "id","owner","tweet","created_date"
+        )

@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> 800fb134c7772451f6ec2b73003829644bc19a6f
 from rest_framework import serializers
 from .models import ProfileModel, TweetModel,LikeModel,RetweetModel,CommentModel
 from django.contrib.auth.models import User
@@ -10,7 +14,6 @@ class UserSerializer(serializers.ModelSerializer):
             "id","username","password"
         )
 
-
 class ProfileSerilizer(serializers.ModelSerializer):
     class Meta:
         model = ProfileModel
@@ -20,6 +23,7 @@ class ProfileSerilizer(serializers.ModelSerializer):
 
 
 class TweetSerializer(serializers.ModelSerializer):
+
     comments = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     likes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     retweets = serializers.PrimaryKeyRelatedField(many=True,read_only= True)
@@ -48,4 +52,3 @@ class RetweetSerializer(serializers.ModelSerializer):
         model = RetweetModel
         fields = (
             "id","owner","tweet","created_date"
-        )

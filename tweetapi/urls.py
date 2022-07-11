@@ -1,6 +1,6 @@
 from unicodedata import name
 from django.urls import path
-from .views import ProfileView,ProfileDetails,TweetView,TweetViewDetails,CommentView,CommentDetails,LikeView,UserView,RetweetView
+from .views import ProfileView,ProfileDetails,TweetView,TweetViewDetails,CommentView,CommentDetails,LikeView,UserView,RetweetView,RetristrationView
 
 urlpatterns=[
 
@@ -13,5 +13,6 @@ urlpatterns=[
     path("comment/<int:pk>", CommentDetails.as_view(), name="delete_comment"),
     path("like", LikeView.as_view(), name="like"),
     path("retweet", RetweetView.as_view(), name="retweet"),
+    path("register", RetristrationView.as_view(),name="register")
 
 ]

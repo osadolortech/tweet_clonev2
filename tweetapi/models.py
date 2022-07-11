@@ -14,7 +14,7 @@ class ProfileModel(models.Model):
 
 class TweetModel(models.Model):
     owner = models.ForeignKey(User,on_delete=models.CASCADE, related_name='tweet')
-    content = models.TextField(max_length=160,blank=True)
+    content = models.TextField(max_length=160,blank=True,null=True)
     created_date = models.TimeField(auto_now=True)
 
     def __str__(self):
@@ -23,7 +23,7 @@ class TweetModel(models.Model):
     @property
     def number_of_likes(self):
         return LikeModel.objects.filter(tweet=self).count()
-        
+
     @property
     def number_of_retweets(self):
         return RetweetModel.objects.filter(tweet=self).count()
@@ -31,7 +31,7 @@ class TweetModel(models.Model):
 
 class CommentModel(models.Model):
     owner = models.ForeignKey(User,on_delete=models.CASCADE, related_name="comments")
-    tweet = models.ForeignKey(TweetModel,related_name="comments",on_delete=models.CASCADE)
+    tweet = models.ForeignKey(TweetModel,on_delete=models.CASCADE,related_name="comments")
     content = models.CharField(max_length=160)
     created_date = models.DateTimeField(auto_now=True)
 

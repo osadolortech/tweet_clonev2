@@ -1,7 +1,7 @@
 from unicodedata import name
 from django.urls import path
 from .views import ProfileView,ProfileDetails,TweetView,TweetViewDetails,CommentView,CommentDetails,LikeView,UserView,RetweetView,RetristrationView
-
+from .login import Login,Logout,UserApiView
 urlpatterns=[
 
     path("user", UserView.as_view(), name="create_user"),
@@ -13,6 +13,10 @@ urlpatterns=[
     path("comment/<int:pk>", CommentDetails.as_view(), name="delete_comment"),
     path("like", LikeView.as_view(), name="like"),
     path("retweet", RetweetView.as_view(), name="retweet"),
-    path("register", RetristrationView.as_view(),name="register")
+    path("register", RetristrationView.as_view(),name="register"),
+    path('login', Login.as_view(), name='login'),
+    path('logout', Logout.as_view(), name='logout'),
+    path('userview', UserApiView.as_view(), name='userview'),
+
 
 ]

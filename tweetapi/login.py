@@ -1,3 +1,4 @@
+from django.conf import settings
 import jwt
 from .serializer import UserSerializer
 from rest_framework.generics import CreateAPIView
@@ -7,6 +8,7 @@ from django.contrib.auth import logout,authenticate
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
+from django.conf import settings
 
 
 
@@ -20,10 +22,12 @@ class Login(CreateAPIView):
         if user is not None:
             payload = {
                 "id":user.id,
+                "exp":settings.ACCESS_EXP,
                 "iat":datetime.datetime.utcnow()
             }
             payload2 = {
                 "id":user.id,
+                "exp":settings.REFRESH_EXP,
                 "iat":datetime.datetime.utcnow()
             }
             access_token = jwt.encode(payload,"secret",algorithm="HS256")

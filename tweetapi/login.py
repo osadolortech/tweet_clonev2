@@ -3,10 +3,11 @@ from .serializer import UserSerializer
 from rest_framework.generics import CreateAPIView
 import datetime
 from django.contrib.auth.models import User
-from django.contrib.auth import login,logout,authenticate
+from django.contrib.auth import logout,authenticate
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
+
 
 
 class Login(CreateAPIView):
@@ -14,23 +15,15 @@ class Login(CreateAPIView):
     def post(self, request, *args, **kwargs):
         username = request.data.get("username")
         password = request.data.get("password")
-
-        if not username or not password:
-            return Response({"error":"please fill all fields"}, status=status.HTTP_400_BAD_REQUEST)
-        check_user = User.objects.filter(username=username)
-        if check_user == False:
-            return Response({"error":"username does not exsit"})
+        
         user = authenticate(username=username,password=password)
         if user is not None:
-            login(request,user)
             payload = {
                 "id":user.id,
-                "exp":datetime.timedelta(minutes=2) + datetime.datetime.utcnow(),
                 "iat":datetime.datetime.utcnow()
             }
             payload2 = {
                 "id":user.id,
-                "exp":datetime.timedelta(days=3) + datetime.datetime.utcnow(),
                 "iat":datetime.datetime.utcnow()
             }
             access_token = jwt.encode(payload,"secret",algorithm="HS256")
@@ -38,6 +31,7 @@ class Login(CreateAPIView):
             response = Response()
             response.set_cookie(key='refreshToken', value=refresh_token, httponly=True)
             response.data = {
+                "username":username,
                 'token':access_token
             }
             return response
@@ -61,5 +55,11 @@ class UserApiView(APIView):
 class Logout(APIView):
     def get(self,request):
         logout(request)
-        return Response("sucessfully logout")
+        response = Response()
+        response.delete_cookie(key="refreshToken")
+        response.data={
+            "message": "successfully logged out"
+        }
+
+        return response
 

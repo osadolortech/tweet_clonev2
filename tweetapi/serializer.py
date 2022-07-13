@@ -14,6 +14,7 @@ class UserSerializer(serializers.ModelSerializer):
         fields = (
             "id","username","password","tweet","comments","retweets","likes"
         )
+       
 
 class ProfileSerilizer(serializers.ModelSerializer):
     class Meta:

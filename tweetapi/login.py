@@ -1,6 +1,7 @@
 from django.conf import settings
 import jwt
 from .serializer import UserSerializer
+from .registration import UserloginSerializer
 from rest_framework.generics import CreateAPIView
 import datetime
 from django.contrib.auth.models import User
@@ -13,12 +14,13 @@ from django.conf import settings
 
 
 class Login(CreateAPIView):
-    serializer_class = UserSerializer
-    def post(self, request, *args, **kwargs):
-        username = request.data.get("username")
-        password = request.data.get("password")
-        
-        user = authenticate(username=username,password=password)
+    serializer_class = UserloginSerializer
+    def post(self, request,format=None):
+        serializer = UserloginSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            username = serializer.data.get("username")
+            password = serializer.data.get("password")
+            user = authenticate(username=username,password=password)
         if user is not None:
             payload = {
                 "id":user.id,
@@ -42,6 +44,8 @@ class Login(CreateAPIView):
         else:
             error = {"Error": status.HTTP_400_BAD_REQUEST,"error_message":"Invalid Username or password"}
         return Response(error,status=status.HTTP_400_BAD_REQUEST)
+        
+
 
 class UserApiView(APIView):
     def get(self,request):
@@ -64,6 +68,9 @@ class Logout(APIView):
         response.data={
             "message": "successfully logged out"
         }
-
         return response
+
+class ChangePassword(APIView):
+   pass
+
 

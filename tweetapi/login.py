@@ -17,34 +17,35 @@ class Login(CreateAPIView):
     serializer_class = UserloginSerializer
     def post(self, request,format=None):
         serializer = UserloginSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
             username = serializer.data.get("username")
             password = serializer.data.get("password")
             user = authenticate(username=username,password=password)
-        if user is not None:
-            payload = {
-                "id":user.id,
-                "exp":settings.ACCESS_EXP,
-                "iat":datetime.datetime.utcnow()
-            }
-            payload2 = {
-                "id":user.id,
-                "exp":settings.REFRESH_EXP,
-                "iat":datetime.datetime.utcnow()
-            }
-            access_token = jwt.encode(payload,"secret",algorithm="HS256")
-            refresh_token = jwt.encode(payload2,"secret",algorithm="HS256")
-            response = Response()
-            response.set_cookie(key='refreshToken', value=refresh_token, httponly=True)
-            response.data = {
-                "username":username,
-                'token':access_token
-            }
-            return response
-        else:
-            error = {"Error": status.HTTP_400_BAD_REQUEST,"error_message":"Invalid Username or password"}
-        return Response(error,status=status.HTTP_400_BAD_REQUEST)
-        
+            if user is not None:
+                payload = {
+                    "id":user.id,
+                    "exp":settings.ACCESS_EXP,
+                    "iat":datetime.datetime.utcnow()
+                }
+                payload2 = {
+                    "id":user.id,
+                    "exp":settings.REFRESH_EXP,
+                    "iat":datetime.datetime.utcnow()
+                }
+                access_token = jwt.encode(payload,"secret",algorithm="HS256")
+                refresh_token = jwt.encode(payload2,"secret",algorithm="HS256")
+                response = Response()
+                response.set_cookie(key='refreshToken', value=refresh_token, httponly=True)
+                response.data = {
+                    "username":username,
+                    'token':access_token
+                }
+                return response
+            else:
+                error = {"Error": status.HTTP_400_BAD_REQUEST,"error_message":"Invalid Username or password"}
+            return Response(error,status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            
 
 
 class UserApiView(APIView):

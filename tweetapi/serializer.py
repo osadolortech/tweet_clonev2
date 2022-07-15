@@ -4,12 +4,17 @@ from django.contrib.auth.models import User
 
 
 class UserSerializer(serializers.ModelSerializer):
-    password = serializers.CharField
+    tweet  = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
+    comments = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
+    likes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    retweets = serializers.PrimaryKeyRelatedField(many=True,read_only= True)
+    password = serializers.CharField(required=True,write_only=True)
     class Meta:
         model = User
         fields = (
-            "id","username","password"
+            "id","username","password","tweet","comments","retweets","likes"
         )
+       
 
 class ProfileSerilizer(serializers.ModelSerializer):
     class Meta:

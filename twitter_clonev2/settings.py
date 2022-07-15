@@ -2,6 +2,7 @@
 from pathlib import Path
 from decouple import config
 import dj_database_url
+import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,11 +30,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'tweetapi'
+    'corsheaders',
+    'tweetapi',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -45,6 +48,7 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 5,
+    
 }
 
 
@@ -117,3 +121,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CORS_ALLOWED_ORIGINS =[
+    "http://localhost:8000"
+]
+CORS_ALLOW_CREDENTIALS = True
+
+
+ACCESS_EXP  = datetime.timedelta(minutes=2) + datetime.datetime.utcnow()
+REFRESH_EXP = datetime.timedelta(days=3) + datetime.datetime.utcnow()

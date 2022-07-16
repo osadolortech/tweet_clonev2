@@ -1,7 +1,7 @@
 from django.conf import settings
 import jwt
 from .serializer import UserSerializer
-from .registration import UserloginSerializer
+from .registration import UserloginSerializer,ChangeSerializers
 from rest_framework.generics import CreateAPIView
 import datetime
 from django.contrib.auth.models import User
@@ -16,7 +16,7 @@ from django.conf import settings
 class Login(CreateAPIView):
     serializer_class = UserloginSerializer
     def post(self, request,format=None):
-        serializer = UserloginSerializer(data=request.data)
+        serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             username = serializer.data.get("username")
             password = serializer.data.get("password")
@@ -71,7 +71,14 @@ class Logout(APIView):
         }
         return response
 
-class ChangePassword(APIView):
-   pass
+class ChangePassword(CreateAPIView):
+    serializer_class = ChangeSerializers
+    def post(self, request, format=None):
+        serializer = self.get_serializer(data=request.data,
+        context=({"user":request.user}))
+        if serializer.is_valid():
+            return Response({"msg":"password changed successfully"}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 

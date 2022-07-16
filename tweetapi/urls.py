@@ -1,7 +1,7 @@
 from unicodedata import name
 from django.urls import path
 from .views import ProfileView,ProfileDetails,TweetView,TweetViewDetails,CommentView,CommentDetails,LikeView,UserView,RetweetView,RetristrationView
-from .login import Login,Logout,UserApiView
+from .login import Login,Logout,UserApiView,ChangePassword
 urlpatterns=[
 
     path("user", UserView.as_view(), name="create_user"),
@@ -17,6 +17,6 @@ urlpatterns=[
     path('login', Login.as_view(), name='login'),
     path('logout', Logout.as_view(), name='logout'),
     path('userview', UserApiView.as_view(), name='userview'),
-
+    path('changepassword', ChangePassword.as_view(), name='change-password'),
 
 ]

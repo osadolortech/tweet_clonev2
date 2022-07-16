@@ -49,7 +49,7 @@ class ChangeSerializers(serializers.Serializer):
         password2= attrs.get('password_confirmation')
         user = self.context.get('user')
         if password != password2:
-            raise serializers.ValidationError({"password":"password filed didnt match"})
+            raise serializers.ValidationError({"password":"password fields didnt match"})
         user.set_password(password)
         user.save()
         return attrs

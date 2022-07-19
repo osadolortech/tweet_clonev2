@@ -1,10 +1,11 @@
-from multiprocessing import context
+from rest_framework.permissions import AllowAny
 from rest_framework import generics
 from rest_framework.response import Response
 from django.db.models import Q
 from .models import TweetModel,ProfileModel,CommentModel,LikeModel,RetweetModel
 from django.contrib.auth.models import User
 from .registration import RegistrationSerializer
+from .permissions import TwitterUserPermission
 from .serializer import ProfileSerilizer,TweetSerializer,CommentSerializer,RetweetSerializer,LikeSerializer,UserSerializer
 
 # Create your views here.
@@ -13,11 +14,13 @@ class UserView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class ProfileView(generics.ListCreateAPIView):
+class ProfileView(generics.ListCreateAPIView,TwitterUserPermission):
+    permission_classes = [TwitterUserPermission]
     queryset = ProfileModel.objects.all()
     serializer_class = ProfileSerilizer
 
-class ProfileDetails(generics.RetrieveUpdateDestroyAPIView):
+class ProfileDetails(generics.RetrieveUpdateDestroyAPIView,TwitterUserPermission):
+    permission_classes = [TwitterUserPermission]
     queryset = ProfileModel.objects.all()
     serializer_class = ProfileSerilizer
 
@@ -25,15 +28,17 @@ class TweetView(generics.ListCreateAPIView):
     queryset = TweetModel.objects.all()
     serializer_class = TweetSerializer
 
-class TweetViewDetails(generics.RetrieveDestroyAPIView):
+class TweetViewDetails(generics.RetrieveDestroyAPIView,TwitterUserPermission):
+    permission_classes = [TwitterUserPermission]
     queryset = TweetModel.objects.all()
-    serializer_class= CommentSerializer
+    serializer_class= TweetSerializer
 
 class CommentView(generics.ListCreateAPIView):
     queryset = CommentModel.objects.all()
     serializer_class = CommentSerializer
 
-class CommentDetails(generics.RetrieveDestroyAPIView):
+class CommentDetails(generics.RetrieveDestroyAPIView,TwitterUserPermission):
+    permission_classes = [TwitterUserPermission]
     queryset = CommentModel.objects.all()
     serializer_class = CommentSerializer
 
@@ -62,6 +67,7 @@ class RetweetView(generics.ListCreateAPIView):
         serializer.save()
     
 class RetristrationView(generics.CreateAPIView):
+    permission_classes=[AllowAny]
     serializer_class = RegistrationSerializer
     def post(self, request, *args, **kwargs):
         serializers = self.get_serializer(data=request.data)

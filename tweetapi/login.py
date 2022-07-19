@@ -102,8 +102,8 @@ class UserPasswordReset(CreateAPIView):
     def post(self, request,uid,token,format=None):
         serializer = self.get_serializer(data=request.data,
         context={'uid':uid,'token':token})
-        if serializer.is_valid():
-            return Response({'msg':"password reset successfully"}, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        return Response({'msg':"password reset successfully"}, status=status.HTTP_200_OK)
+    
 
 

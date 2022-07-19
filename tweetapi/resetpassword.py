@@ -18,7 +18,6 @@ class SendUserPasswordReset(serializers.Serializer):
         if User.objects.filter(username=username).exists():
             user = User.objects.get(username=username)
             uid = urlsafe_base64_encode(force_bytes(user.id))
-            print("Encoded Uid",uid)
             token=PasswordResetTokenGenerator().make_token(user)
             link  = 'http://localhost:8000/api/v2/reset-password/'+uid+'/'+token
             print('password reset link',link)
@@ -27,8 +26,8 @@ class SendUserPasswordReset(serializers.Serializer):
             raise ValidationError('you are not a registered user')
 
 class UserPasswordReset(serializers.Serializer):
-    password = serializers.CharField(write_only=True, style={'input_type':'passwor'})
-    password_confirmation = serializers.CharField(write_only=True, style={'input_type':'passwor'})
+    password = serializers.CharField(write_only=True, style={'input_type':'password'})
+    password_confirmation = serializers.CharField(write_only=True, style={'input_type':'password'})
     class Meta:
         fields = (
             'password','password_confirmation'
@@ -43,12 +42,12 @@ class UserPasswordReset(serializers.Serializer):
                 raise serializers.ValidationError({"password":"password filed didnt match"})
             id = smart_str(urlsafe_base64_decode(uid))
             user= User.objects.get(id=id)
-            if not PasswordResetTokenGenerator().check_token(user,token):
+            
+            if not PasswordResetTokenGenerator().check_token(user,token) and not user:
                 raise ValidationError('token is not valid or expired')
             user.set_password(password)
             user.save()
             return attrs
-        except DjangoUnicodeDecodeError as identifier:
-            PasswordResetTokenGenerator.check_token(user,token)
+        except DjangoUnicodeDecodeError:
             raise ValidationError('token is not valid or expired')  
 

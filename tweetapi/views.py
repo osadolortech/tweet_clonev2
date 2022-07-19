@@ -14,8 +14,8 @@ class UserView(generics.ListCreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
-class ProfileView(generics.ListCreateAPIView,TwitterUserPermission):
-    permission_classes = [TwitterUserPermission]
+class ProfileView(generics.ListCreateAPIView):
+    permission_classes=[TwitterUserPermission]
     queryset = ProfileModel.objects.all()
     serializer_class = ProfileSerilizer
 

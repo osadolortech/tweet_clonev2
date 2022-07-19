@@ -6,7 +6,7 @@ from .registration import UserloginSerializer,ChangeSerializers
 from rest_framework.generics import CreateAPIView
 import datetime
 from django.contrib.auth.models import User
-from django.contrib.auth import logout,authenticate
+from django.contrib.auth import logout,authenticate,login
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
@@ -27,6 +27,7 @@ class Login(CreateAPIView):
             password = serializer.data.get("password")
             user = authenticate(username=username,password=password)
             if user is not None:
+                login(request,user)
                 payload = {
                     "id":user.id,
                     "exp":settings.ACCESS_EXP,
@@ -38,7 +39,7 @@ class Login(CreateAPIView):
                     "iat":datetime.datetime.utcnow(),
                 }
                 access_token = jwt.encode(payload,"secret",algorithm="HS256")
-                refresh_token = jwt.encode(payload2,"secret",algorithm="HS256",)
+                refresh_token = jwt.encode(payload2,"secret",algorithm="HS256")
                 response = Response()
                 response.set_cookie(key='refreshToken', value=refresh_token, httponly=True)
                 response.data = {
@@ -91,9 +92,9 @@ class Resetpassword(CreateAPIView):
     serializer_class = SendUserPasswordReset
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            return Response({'message':"password reset sent, check your mail"}, status=status.HTTP_200_OK)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        serializer.is_valid(raise_exception=True)
+        return Response({'message':"password reset sent, check your mail"}, status=status.HTTP_200_OK)
+    
 
 
 class UserPasswordReset(CreateAPIView):
@@ -101,7 +102,7 @@ class UserPasswordReset(CreateAPIView):
     def post(self, request,uid,token,format=None):
         serializer = self.get_serializer(data=request.data,
         context={'uid':uid,'token':token})
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
             return Response({'msg':"password reset successfully"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

@@ -42,8 +42,9 @@ class UserPasswordReset(serializers.Serializer):
                 raise serializers.ValidationError({"password":"password filed didnt match"})
             id = smart_str(urlsafe_base64_decode(uid))
             user= User.objects.get(id=id)
-            
-            if not PasswordResetTokenGenerator().check_token(user,token) and not user:
+            if not user:
+                raise ValidationError('user does not exist')
+            if not PasswordResetTokenGenerator().check_token(user,token):
                 raise ValidationError('token is not valid or expired')
             user.set_password(password)
             user.save()

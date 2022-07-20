@@ -19,7 +19,7 @@ class ProfileView(generics.ListCreateAPIView):
     queryset = ProfileModel.objects.all()
     serializer_class = ProfileSerilizer
 
-class ProfileDetails(generics.RetrieveUpdateDestroyAPIView,TwitterUserPermission):
+class ProfileDetails(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [TwitterUserPermission]
     queryset = ProfileModel.objects.all()
     serializer_class = ProfileSerilizer
@@ -28,7 +28,7 @@ class TweetView(generics.ListCreateAPIView):
     queryset = TweetModel.objects.all()
     serializer_class = TweetSerializer
 
-class TweetViewDetails(generics.RetrieveDestroyAPIView,TwitterUserPermission):
+class TweetViewDetails(generics.RetrieveDestroyAPIView):
     permission_classes = [TwitterUserPermission]
     queryset = TweetModel.objects.all()
     serializer_class= TweetSerializer
@@ -37,7 +37,7 @@ class CommentView(generics.ListCreateAPIView):
     queryset = CommentModel.objects.all()
     serializer_class = CommentSerializer
 
-class CommentDetails(generics.RetrieveDestroyAPIView,TwitterUserPermission):
+class CommentDetails(generics.RetrieveDestroyAPIView):
     permission_classes = [TwitterUserPermission]
     queryset = CommentModel.objects.all()
     serializer_class = CommentSerializer

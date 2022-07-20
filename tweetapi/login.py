@@ -6,7 +6,7 @@ from .registration import UserloginSerializer,ChangeSerializers
 from rest_framework.generics import CreateAPIView
 import datetime
 from django.contrib.auth.models import User
-from django.contrib.auth import logout,authenticate,login
+from django.contrib.auth import logout,authenticate
 from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
@@ -27,7 +27,6 @@ class Login(CreateAPIView):
             password = serializer.data.get("password")
             user = authenticate(username=username,password=password)
             if user is not None:
-                login(request,user)
                 payload = {
                     "id":user.id,
                     "exp":settings.ACCESS_EXP,

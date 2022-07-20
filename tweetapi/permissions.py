@@ -7,4 +7,4 @@ class TwitterUserPermission(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         else:
-            return obj.username==request.user
+            return obj.owner==request.user

@@ -1,6 +1,4 @@
 from django.forms import ValidationError
-from rest_framework import status
-from rest_framework.response import Response
 from django.utils.http import urlsafe_base64_decode,urlsafe_base64_encode
 from django.utils.encoding import smart_str,force_bytes,DjangoUnicodeDecodeError
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -41,8 +39,9 @@ class UserPasswordReset(serializers.Serializer):
             if password != password_confirmation:
                 raise serializers.ValidationError({"password":"password filed didnt match"})
             id = smart_str(urlsafe_base64_decode(uid))
-            user= User.objects.get(id=id)
-            if not user:
+            try:
+                user= User.objects.get(id=id)
+            except:
                 raise ValidationError('user does not exist')
             if not PasswordResetTokenGenerator().check_token(user,token):
                 raise ValidationError('token is not valid or expired')

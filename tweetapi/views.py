@@ -6,8 +6,8 @@ from .models import TweetModel,ProfileModel,CommentModel,LikeModel,RetweetModel
 from django.contrib.auth.models import User
 from .registration import RegistrationSerializer
 from .permissions import TwitterUserPermission
+from rest_framework.permissions import IsAuthenticated
 from .serializer import ProfileSerilizer,TweetSerializer,CommentSerializer,RetweetSerializer,LikeSerializer,UserSerializer
-
 # Create your views here.
 
 class UserView(generics.ListCreateAPIView):

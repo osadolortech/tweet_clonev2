@@ -20,9 +20,8 @@ class ProfileSerilizer(serializers.ModelSerializer):
     class Meta:
         model = ProfileModel
         fields = (
-            "id","username","first_name","last_name","bio","location","birth_date"
+            "id","owner","first_name","last_name","bio","location","birth_date"
         )
-
 
 class TweetSerializer(serializers.ModelSerializer):
 

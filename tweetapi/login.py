@@ -1,3 +1,4 @@
+
 from django.conf import settings
 import jwt
 from .serializer import UserSerializer
@@ -10,10 +11,14 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from django.conf import settings
+from .permissions import TwitterUserPermission
+from rest_framework.permissions import AllowAny
+from .resetpassword import SendUserPasswordReset,UserPasswordReset
 
 
 
 class Login(CreateAPIView):
+    permission_classes = [AllowAny]
     serializer_class = UserloginSerializer
     def post(self, request,format=None):
         serializer = self.get_serializer(data=request.data)
@@ -30,7 +35,7 @@ class Login(CreateAPIView):
                 payload2 = {
                     "id":user.id,
                     "exp":settings.REFRESH_EXP,
-                    "iat":datetime.datetime.utcnow()
+                    "iat":datetime.datetime.utcnow(),
                 }
                 access_token = jwt.encode(payload,"secret",algorithm="HS256")
                 refresh_token = jwt.encode(payload2,"secret",algorithm="HS256")
@@ -38,7 +43,8 @@ class Login(CreateAPIView):
                 response.set_cookie(key='refreshToken', value=refresh_token, httponly=True)
                 response.data = {
                     "username":username,
-                    'token':access_token
+                    'token':access_token,
+                    "refresh_token":refresh_token
                 }
                 return response
             else:
@@ -71,7 +77,7 @@ class Logout(APIView):
         }
         return response
 
-class ChangePassword(CreateAPIView):
+class ChangePassword(CreateAPIView,TwitterUserPermission):
     serializer_class = ChangeSerializers
     def post(self, request, format=None):
         serializer = self.get_serializer(data=request.data,
@@ -80,5 +86,23 @@ class ChangePassword(CreateAPIView):
             return Response({"msg":"password changed successfully"}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class Resetpassword(CreateAPIView):
+    serializer_class = SendUserPasswordReset
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response({'message':"password reset sent, check your mail"}, status=status.HTTP_200_OK)
+    
+
+
+class UserPasswordReset(CreateAPIView):
+    serializer_class = UserPasswordReset
+    def post(self, request,uid,token,format=None):
+        serializer = self.get_serializer(data=request.data,
+        context={'uid':uid,'token':token})
+        serializer.is_valid(raise_exception=True)
+        return Response({'msg':"password reset successfully"}, status=status.HTTP_200_OK)
+    
 
 

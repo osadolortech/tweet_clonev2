@@ -1,12 +1,13 @@
-from multiprocessing import context
+from rest_framework.permissions import AllowAny
 from rest_framework import generics
 from rest_framework.response import Response
 from django.db.models import Q
 from .models import TweetModel,ProfileModel,CommentModel,LikeModel,RetweetModel
 from django.contrib.auth.models import User
 from .registration import RegistrationSerializer
+from .permissions import TwitterUserPermission
+from rest_framework.permissions import IsAuthenticated
 from .serializer import ProfileSerilizer,TweetSerializer,CommentSerializer,RetweetSerializer,LikeSerializer,UserSerializer
-
 # Create your views here.
 
 class UserView(generics.ListCreateAPIView):
@@ -14,10 +15,12 @@ class UserView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
 
 class ProfileView(generics.ListCreateAPIView):
+    permission_classes=[TwitterUserPermission]
     queryset = ProfileModel.objects.all()
     serializer_class = ProfileSerilizer
 
 class ProfileDetails(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [TwitterUserPermission]
     queryset = ProfileModel.objects.all()
     serializer_class = ProfileSerilizer
 
@@ -26,14 +29,16 @@ class TweetView(generics.ListCreateAPIView):
     serializer_class = TweetSerializer
 
 class TweetViewDetails(generics.RetrieveDestroyAPIView):
+    permission_classes = [TwitterUserPermission]
     queryset = TweetModel.objects.all()
-    serializer_class= CommentSerializer
+    serializer_class= TweetSerializer
 
 class CommentView(generics.ListCreateAPIView):
     queryset = CommentModel.objects.all()
     serializer_class = CommentSerializer
 
 class CommentDetails(generics.RetrieveDestroyAPIView):
+    permission_classes = [TwitterUserPermission]
     queryset = CommentModel.objects.all()
     serializer_class = CommentSerializer
 
@@ -62,6 +67,7 @@ class RetweetView(generics.ListCreateAPIView):
         serializer.save()
     
 class RetristrationView(generics.CreateAPIView):
+    permission_classes=[AllowAny]
     serializer_class = RegistrationSerializer
     def post(self, request, *args, **kwargs):
         serializers = self.get_serializer(data=request.data)

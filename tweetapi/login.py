@@ -13,6 +13,9 @@ from rest_framework.response import Response
 from django.conf import settings
 from .permissions import TwitterUserPermission
 from rest_framework.permissions import AllowAny
+from .permissions import TwitterUserPermission
+from .authentication import Authentication
+from rest_framework.permissions import IsAuthenticated
 from .resetpassword import SendUserPasswordReset,UserPasswordReset
 
 
@@ -78,6 +81,9 @@ class Logout(APIView):
         return response
 
 class ChangePassword(CreateAPIView,TwitterUserPermission):
+    authentication_classes = [Authentication]
+    permission_classes = [IsAuthenticated]
+    permission_classes = [TwitterUserPermission]
     serializer_class = ChangeSerializers
     def post(self, request, format=None):
         serializer = self.get_serializer(data=request.data,

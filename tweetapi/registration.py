@@ -53,3 +53,4 @@ class ChangeSerializers(serializers.Serializer,):
         user.set_password(password)
         user.save()
         return attrs
+

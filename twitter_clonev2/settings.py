@@ -48,6 +48,10 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 5,
+    # 'DEFAULT_AUTHENTICATION_CLASSES': (
+    #     'tweetapi.authentication.Authentication',
+    # ),
+
 }
 
 
@@ -127,5 +131,5 @@ CORS_ALLOWED_ORIGINS =[
 CORS_ALLOW_CREDENTIALS = True
 
 
-ACCESS_EXP  = datetime.timedelta(minutes=2) + datetime.datetime.utcnow()
+ACCESS_EXP  = datetime.timedelta(hours=2) + datetime.datetime.utcnow()
 REFRESH_EXP = datetime.timedelta(days=3) + datetime.datetime.utcnow()

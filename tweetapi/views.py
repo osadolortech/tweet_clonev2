@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from .registration import RegistrationSerializer
 from .permissions import TwitterUserPermission
 from rest_framework.permissions import IsAuthenticated
+from .authentication import Authentication
 from .serializer import ProfileSerilizer,TweetSerializer,CommentSerializer,RetweetSerializer,LikeSerializer,UserSerializer
 # Create your views here.
 
@@ -15,34 +16,48 @@ class UserView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
 
 class ProfileView(generics.ListCreateAPIView):
-    permission_classes=[TwitterUserPermission]
+    authentication_classes = [Authentication]
+    permission_classes = [IsAuthenticated]
     queryset = ProfileModel.objects.all()
     serializer_class = ProfileSerilizer
 
 class ProfileDetails(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [Authentication]
+    permission_classes = [IsAuthenticated]
     permission_classes = [TwitterUserPermission]
     queryset = ProfileModel.objects.all()
     serializer_class = ProfileSerilizer
 
 class TweetView(generics.ListCreateAPIView):
+    authentication_classes = [Authentication]
     queryset = TweetModel.objects.all()
     serializer_class = TweetSerializer
 
 class TweetViewDetails(generics.RetrieveDestroyAPIView):
+    permission_classes =[IsAuthenticated]
     permission_classes = [TwitterUserPermission]
     queryset = TweetModel.objects.all()
     serializer_class= TweetSerializer
 
 class CommentView(generics.ListCreateAPIView):
+    authentication_classes = [Authentication]
+    permission_classes = [IsAuthenticated]
+    permission_classes = [TwitterUserPermission]
     queryset = CommentModel.objects.all()
     serializer_class = CommentSerializer
 
 class CommentDetails(generics.RetrieveDestroyAPIView):
+    authentication_classes = [Authentication]
+    permission_classes = [IsAuthenticated]
+    permission_classes = [TwitterUserPermission]
     permission_classes = [TwitterUserPermission]
     queryset = CommentModel.objects.all()
     serializer_class = CommentSerializer
 
 class LikeView(generics.ListCreateAPIView):
+    authentication_classes = [Authentication]
+    permission_classes = [IsAuthenticated]
+    permission_classes = [TwitterUserPermission]
     queryset = LikeModel.objects.all()
     serializer_class = LikeSerializer
 
@@ -55,6 +70,9 @@ class LikeView(generics.ListCreateAPIView):
         serializer.save()
 
 class RetweetView(generics.ListCreateAPIView):
+    authentication_classes = [Authentication]
+    permission_classes = [IsAuthenticated]
+    permission_classes = [TwitterUserPermission]
     queryset = RetweetModel.objects.all()
     serializer_class = RetweetSerializer
 

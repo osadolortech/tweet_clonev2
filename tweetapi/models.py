@@ -13,6 +13,8 @@ class ProfileModel(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return self.owner
 
 class TweetModel(models.Model):
     owner = models.ForeignKey(User,on_delete=models.CASCADE, related_name='tweet')

@@ -11,11 +11,8 @@ from rest_framework.views import APIView
 from rest_framework import status
 from rest_framework.response import Response
 from django.conf import settings
-from .permissions import TwitterUserPermission
 from rest_framework.permissions import AllowAny
-from .permissions import TwitterUserPermission
 from .authentication import Authentication
-from rest_framework.permissions import IsAuthenticated
 from .resetpassword import SendUserPasswordReset,UserPasswordReset
 
 
@@ -32,11 +29,13 @@ class Login(CreateAPIView):
             if user is not None:
                 payload = {
                     "id":user.id,
+                    "username":user.username,
                     "exp":settings.ACCESS_EXP,
                     "iat":datetime.datetime.utcnow()
                 }
                 payload2 = {
                     "id":user.id,
+                    "username":user.username,
                     "exp":settings.REFRESH_EXP,
                     "iat":datetime.datetime.utcnow(),
                 }
@@ -71,6 +70,7 @@ class UserApiView(APIView):
         return Response(serializer.data)
 
 class Logout(APIView):
+    authentication_classes=[Authentication]
     def get(self,request):
         logout(request)
         response = Response()
@@ -80,10 +80,8 @@ class Logout(APIView):
         }
         return response
 
-class ChangePassword(CreateAPIView,TwitterUserPermission):
+class ChangePassword(CreateAPIView):
     authentication_classes = [Authentication]
-    permission_classes = [IsAuthenticated]
-    permission_classes = [TwitterUserPermission]
     serializer_class = ChangeSerializers
     def post(self, request, format=None):
         serializer = self.get_serializer(data=request.data,
@@ -94,6 +92,7 @@ class ChangePassword(CreateAPIView,TwitterUserPermission):
 
 
 class Resetpassword(CreateAPIView):
+    permission_classes=[AllowAny]
     serializer_class = SendUserPasswordReset
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -103,6 +102,7 @@ class Resetpassword(CreateAPIView):
 
 
 class UserPasswordReset(CreateAPIView):
+    permission_classes=[AllowAny]
     serializer_class = UserPasswordReset
     def post(self, request,uid,token,format=None):
         serializer = self.get_serializer(data=request.data,

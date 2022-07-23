@@ -18,10 +18,10 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ProfileSerilizer(serializers.ModelSerializer):
     class Meta:
-        username = serializers.PrimaryKeyRelatedField(read_only=True)
+
         model = ProfileModel
         fields = (
-            "id","owner","username","first_name","last_name","bio","location","birth_date"
+            "id","owner","first_name","last_name","bio","location","birth_date"
         )
 
 class TweetSerializer(serializers.ModelSerializer):

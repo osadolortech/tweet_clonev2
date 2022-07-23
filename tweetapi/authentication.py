@@ -2,7 +2,6 @@ from rest_framework.authentication import get_authorization_header,BaseAuthentic
 from rest_framework import exceptions
 from django.contrib.auth.models import User
 import jwt
-from django.conf import settings
 
 class Authentication(BaseAuthentication):
     def authenticate(self, request):
@@ -18,16 +17,16 @@ class Authentication(BaseAuthentication):
 
         try:
             payload = jwt.decode(token,"secret",algorithms=["HS256"])
-            id = payload['id']
-            user = User.objects.get(id=id)
+            username= payload['username']
+            user = User.objects.get(username=username)
             return (user,token)
-        except jwt.ExpiredSignatureError as ex:
+        except jwt.ExpiredSignatureError:
             raise exceptions.AuthenticationFailed('token is expired login again')
         
-        except jwt.DecodeError as ex:
+        except jwt.DecodeError:
             raise exceptions.AuthenticationFailed("TOKEN IS INVALID")
 
-        except User.DoesNotExist as no_user:
+        except User.DoesNotExist:
            raise exceptions.AuthenticationFailed("NO SUCH USER") 
 
 

@@ -14,7 +14,6 @@ class UserView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
 
 class ProfileView(generics.ListCreateAPIView):
-    permission_classes = [AllowAny]
     queryset = ProfileModel.objects.all()
     serializer_class = ProfileSerilizer
 
@@ -24,7 +23,6 @@ class ProfileDetails(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProfileSerilizer
 
 class TweetView(generics.ListCreateAPIView):
-    permission_classes = [AllowAny]
     queryset = TweetModel.objects.all()
     serializer_class = TweetSerializer
 

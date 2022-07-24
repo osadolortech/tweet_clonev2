@@ -2,7 +2,7 @@
 from django.conf import settings
 import jwt
 from .serializer import UserSerializer
-from .registration import UserloginSerializer,ChangePasswordSerializers
+from .registration import UserloginSerializer,ChangePasswordSerializer
 from rest_framework.generics import CreateAPIView
 import datetime
 from django.contrib.auth.models import User
@@ -80,7 +80,7 @@ class Logout(APIView):
         return response
 
 class ChangePassword(CreateAPIView):
-    serializer_class = ChangePasswordSerializers
+    serializer_class = ChangePasswordSerializer
     def post(self, request, format=None):
         serializer = self.get_serializer(data=request.data,
         context=({"user":request.user}))

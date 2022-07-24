@@ -17,9 +17,8 @@ class Authentication(BaseAuthentication):
 
         try:
             payload = jwt.decode(token,"secret",algorithms=["HS256"])
-            id= payload['id']
             try:
-                user = User.objects.get(id=id)
+                user = User.objects.get(id=payload['id'])
             except Exception:
                 raise exceptions.AuthenticationFailed('user does not exists')
             return (user,token)

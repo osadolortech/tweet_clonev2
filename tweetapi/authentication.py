@@ -17,8 +17,11 @@ class Authentication(BaseAuthentication):
 
         try:
             payload = jwt.decode(token,"secret",algorithms=["HS256"])
-            username= payload['username']
-            user = User.objects.get(username=username)
+            id= payload['id']
+            try:
+                user = User.objects.get(id=id)
+            except Exception:
+                raise exceptions.AuthenticationFailed('user does not exists')
             return (user,token)
         except jwt.ExpiredSignatureError:
             raise exceptions.AuthenticationFailed('token is expired login again')

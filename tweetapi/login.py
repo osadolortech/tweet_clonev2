@@ -2,7 +2,7 @@
 from django.conf import settings
 import jwt
 from .serializer import UserSerializer
-from .registration import UserloginSerializer,ChangeSerializers
+from .registration import UserloginSerializer,ChangePasswordSerializers
 from rest_framework.generics import CreateAPIView
 import datetime
 from django.contrib.auth.models import User
@@ -12,13 +12,13 @@ from rest_framework import status
 from rest_framework.response import Response
 from django.conf import settings
 from rest_framework.permissions import AllowAny
-from .authentication import Authentication
 from .resetpassword import SendUserPasswordReset,UserPasswordReset
 
 
 
 class Login(CreateAPIView):
     permission_classes = [AllowAny]
+    authentication_classes= []
     serializer_class = UserloginSerializer
     def post(self, request,format=None):
         serializer = self.get_serializer(data=request.data)
@@ -70,7 +70,6 @@ class UserApiView(APIView):
         return Response(serializer.data)
 
 class Logout(APIView):
-    authentication_classes=[Authentication]
     def get(self,request):
         logout(request)
         response = Response()
@@ -81,8 +80,7 @@ class Logout(APIView):
         return response
 
 class ChangePassword(CreateAPIView):
-    authentication_classes = [Authentication]
-    serializer_class = ChangeSerializers
+    serializer_class = ChangePasswordSerializers
     def post(self, request, format=None):
         serializer = self.get_serializer(data=request.data,
         context=({"user":request.user}))
@@ -93,6 +91,7 @@ class ChangePassword(CreateAPIView):
 
 class Resetpassword(CreateAPIView):
     permission_classes=[AllowAny]
+    authentication_classes=[]
     serializer_class = SendUserPasswordReset
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
@@ -103,6 +102,7 @@ class Resetpassword(CreateAPIView):
 
 class UserPasswordReset(CreateAPIView):
     permission_classes=[AllowAny]
+    authentication_classes=[]
     serializer_class = UserPasswordReset
     def post(self, request,uid,token,format=None):
         serializer = self.get_serializer(data=request.data,

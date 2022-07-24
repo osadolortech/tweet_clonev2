@@ -29,13 +29,11 @@ class Login(CreateAPIView):
             if user is not None:
                 payload = {
                     "id":user.id,
-                    "username":user.username,
                     "exp":settings.ACCESS_EXP,
                     "iat":datetime.datetime.utcnow()
                 }
                 payload2 = {
                     "id":user.id,
-                    "username":user.username,
                     "exp":settings.REFRESH_EXP,
                     "iat":datetime.datetime.utcnow(),
                 }

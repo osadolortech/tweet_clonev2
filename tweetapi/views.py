@@ -14,8 +14,19 @@ class UserView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
 
 class ProfileView(generics.ListCreateAPIView):
+    permission_classes = [TwitterUserPermission]
     queryset = ProfileModel.objects.all()
     serializer_class = ProfileSerilizer
+
+    def perform_create(self, serializer):
+        queryset = self.filter_queryset(self.get_queryset())
+        owner = queryset.filter(Q(owner_id=self.request.data['owner']))
+        # owner cant have more than one profile.
+        if owner.count() > 0:
+            return None
+        # can only create a profile for yourself 
+        serializer.save(owner=self.request.user)
+        
 
 class ProfileDetails(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [TwitterUserPermission]
@@ -27,11 +38,11 @@ class TweetView(generics.ListCreateAPIView):
     serializer_class = TweetSerializer
 
 class TweetViewDetails(generics.RetrieveDestroyAPIView):
+    permission_classes = [TwitterUserPermission]
     queryset = TweetModel.objects.all()
     serializer_class= TweetSerializer
 
 class CommentView(generics.ListCreateAPIView):
-    permission_classes = [TwitterUserPermission]
     queryset = CommentModel.objects.all()
     serializer_class = CommentSerializer
 
@@ -41,7 +52,6 @@ class CommentDetails(generics.RetrieveDestroyAPIView):
     serializer_class = CommentSerializer
 
 class LikeView(generics.ListCreateAPIView):
-    permission_classes = [TwitterUserPermission]
     queryset = LikeModel.objects.all()
     serializer_class = LikeSerializer
 
@@ -54,7 +64,6 @@ class LikeView(generics.ListCreateAPIView):
         serializer.save()
 
 class RetweetView(generics.ListCreateAPIView):
-    permission_classes = [TwitterUserPermission]
     queryset = RetweetModel.objects.all()
     serializer_class = RetweetSerializer
 

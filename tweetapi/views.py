@@ -38,6 +38,7 @@ class TweetView(generics.ListCreateAPIView):
     serializer_class = TweetSerializer
 
 class TweetViewDetails(generics.RetrieveDestroyAPIView):
+    # i have it here sir
     permission_classes = [TwitterUserPermission]
     queryset = TweetModel.objects.all()
     serializer_class= TweetSerializer

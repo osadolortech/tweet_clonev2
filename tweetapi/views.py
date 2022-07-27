@@ -6,29 +6,44 @@ from .models import TweetModel,ProfileModel,CommentModel,LikeModel,RetweetModel
 from django.contrib.auth.models import User
 from .registration import RegistrationSerializer
 from .permissions import TwitterUserPermission
-from rest_framework.permissions import IsAuthenticated
-from .serializer import ProfileSerilizer,TweetSerializer,CommentSerializer,RetweetSerializer,LikeSerializer,UserSerializer
+from .serializer import ProfileSerializer,TweetSerializer,CommentSerializer,RetweetSerializer,LikeSerializer,UserSerializer
 # Create your views here.
 
-class UserView(generics.ListCreateAPIView):
-    queryset = User.objects.all()
+# class UserView(generics.ListAPIView):
+#     queryset = User.objects.select_related("user_profile")
+#     serializer_class = UserSerializer
+    
+
+class RetreiveUserView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [TwitterUserPermission]
+    queryset = User.objects.select_related("user_profile")
     serializer_class = UserSerializer
 
-class ProfileView(generics.ListCreateAPIView):
-    permission_classes=[TwitterUserPermission]
+class CreateEdithProfileView(generics.CreateAPIView):
     queryset = ProfileModel.objects.all()
-    serializer_class = ProfileSerilizer
+    serializer_class = ProfileSerializer
+    
+    def perform_create(self, serializer):
+        queryset = self.filter_queryset(self.get_queryset())
+        owner = queryset.filter(Q(owner_id=self.request.data['owner']))
+        # owner cant have more than one profile.
+        if owner.count() > 0:
+            return None
+        return serializer.save(owner=self.request.user)
+        
 
-class ProfileDetails(generics.RetrieveUpdateDestroyAPIView):
+class UpdateProfileDetails(generics.RetrieveUpdateAPIView):
     permission_classes = [TwitterUserPermission]
-    queryset = ProfileModel.objects.all()
-    serializer_class = ProfileSerilizer
+    queryset = ProfileModel.objects.select_related('owner')
+    serializer_class = ProfileSerializer
+    lookup_field = "owner"
 
 class TweetView(generics.ListCreateAPIView):
     queryset = TweetModel.objects.all()
     serializer_class = TweetSerializer
 
 class TweetViewDetails(generics.RetrieveDestroyAPIView):
+    # i have it here sir
     permission_classes = [TwitterUserPermission]
     queryset = TweetModel.objects.all()
     serializer_class= TweetSerializer
@@ -66,8 +81,9 @@ class RetweetView(generics.ListCreateAPIView):
             return
         serializer.save()
     
-class RetristrationView(generics.CreateAPIView):
+class RegistrationView(generics.CreateAPIView):
     permission_classes=[AllowAny]
+    authentication_classes=[]
     serializer_class = RegistrationSerializer
     def post(self, request, *args, **kwargs):
         serializers = self.get_serializer(data=request.data)

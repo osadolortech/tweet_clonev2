@@ -36,7 +36,7 @@ class UserloginSerializer(serializers.ModelSerializer):
         model=User
         fields=("username","password")
 
-class ChangeSerializers(serializers.Serializer,):
+class ChangePasswordSerializer(serializers.Serializer):
     password = serializers.CharField(write_only=True)
     password_confirmation = serializers.CharField(write_only=True)
     class Meta:
@@ -53,3 +53,4 @@ class ChangeSerializers(serializers.Serializer,):
         user.set_password(password)
         user.save()
         return attrs
+

@@ -4,17 +4,15 @@ from .models import ProfileModel, TweetModel,LikeModel,RetweetModel,CommentModel
 from django.contrib.auth.models import User
 
 
-class ProfileSerilizer(serializers.ModelSerializer):
-    first_name = serializers.PrimaryKeyRelatedField(read_only=True)
-    last_name = serializers.PrimaryKeyRelatedField(read_only=True)
+class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProfileModel
         fields = (
-            "id","owner","bio","location","birth_date","first_name","last_name"
+            "id","owner","bio","location","birth_date"
         )
 
 class UserSerializer(serializers.ModelSerializer):
-    user_profile = ProfileSerilizer()
+    user_profile = ProfileSerializer()
     tweet  = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     comments = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     likes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)

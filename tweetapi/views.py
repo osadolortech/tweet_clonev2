@@ -6,21 +6,22 @@ from .models import TweetModel,ProfileModel,CommentModel,LikeModel,RetweetModel
 from django.contrib.auth.models import User
 from .registration import RegistrationSerializer
 from .permissions import TwitterUserPermission
-from .serializer import ProfileSerilizer,TweetSerializer,CommentSerializer,RetweetSerializer,LikeSerializer,UserSerializer
+from .serializer import ProfileSerializer,TweetSerializer,CommentSerializer,RetweetSerializer,LikeSerializer,UserSerializer
 # Create your views here.
 
-class UserView(generics.ListAPIView):
-    queryset = User.objects.prefetch_related("user_profile")
-    serializer_class = UserSerializer
+# class UserView(generics.ListAPIView):
+#     queryset = User.objects.select_related("user_profile")
+#     serializer_class = UserSerializer
+    
 
-class RetriveUserView(generics.RetrieveUpdateDestroyAPIView):
+class RetreiveUserView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = [TwitterUserPermission]
-    queryset = User.objects.prefetch_related("user_profile")
+    queryset = User.objects.select_related("user_profile")
     serializer_class = UserSerializer
 
 class CreateEdithProfileView(generics.CreateAPIView):
     queryset = ProfileModel.objects.all()
-    serializer_class = ProfileSerilizer
+    serializer_class = ProfileSerializer
     
     def perform_create(self, serializer):
         queryset = self.filter_queryset(self.get_queryset())
@@ -34,7 +35,7 @@ class CreateEdithProfileView(generics.CreateAPIView):
 class UpdateProfileDetails(generics.RetrieveUpdateAPIView):
     permission_classes = [TwitterUserPermission]
     queryset = ProfileModel.objects.select_related('owner')
-    serializer_class = ProfileSerilizer
+    serializer_class = ProfileSerializer
     lookup_field = "owner"
 
 class TweetView(generics.ListCreateAPIView):
@@ -80,7 +81,7 @@ class RetweetView(generics.ListCreateAPIView):
             return
         serializer.save()
     
-class RetristrationView(generics.CreateAPIView):
+class RegistrationView(generics.CreateAPIView):
     permission_classes=[AllowAny]
     authentication_classes=[]
     serializer_class = RegistrationSerializer

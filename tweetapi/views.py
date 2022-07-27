@@ -9,28 +9,33 @@ from .permissions import TwitterUserPermission
 from .serializer import ProfileSerilizer,TweetSerializer,CommentSerializer,RetweetSerializer,LikeSerializer,UserSerializer
 # Create your views here.
 
-class UserView(generics.ListCreateAPIView):
-    queryset = User.objects.all()
+class UserView(generics.ListAPIView):
+    queryset = User.objects.prefetch_related("user_profile")
     serializer_class = UserSerializer
 
-class ProfileView(generics.ListCreateAPIView):
+class RetriveUserView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = [TwitterUserPermission]
+    queryset = User.objects.prefetch_related("user_profile")
+    serializer_class = UserSerializer
+
+class CreateEdithProfileView(generics.CreateAPIView):
     queryset = ProfileModel.objects.all()
     serializer_class = ProfileSerilizer
-
+    
     def perform_create(self, serializer):
         queryset = self.filter_queryset(self.get_queryset())
         owner = queryset.filter(Q(owner_id=self.request.data['owner']))
         # owner cant have more than one profile.
         if owner.count() > 0:
             return None
-        # can only create a profile for yourself 
-        serializer.save(owner=self.request.user)
+        return serializer.save(owner=self.request.user)
         
 
-class ProfileDetails(generics.RetrieveUpdateDestroyAPIView):
+class UpdateProfileDetails(generics.RetrieveUpdateAPIView):
     permission_classes = [TwitterUserPermission]
-    queryset = ProfileModel.objects.all()
+    queryset = ProfileModel.objects.select_related('owner')
     serializer_class = ProfileSerilizer
+    lookup_field = "owner"
 
 class TweetView(generics.ListCreateAPIView):
     queryset = TweetModel.objects.all()

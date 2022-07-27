@@ -54,7 +54,7 @@ class Login(CreateAPIView):
             
 
 
-class UserApiView(APIView):
+class ProfileView(APIView):
     def get(self,request):
         token = request.COOKIES.get('refreshToken')
         if not token:
@@ -66,6 +66,7 @@ class UserApiView(APIView):
         user = User.objects.filter(id=payload['id']).first()
         serializer=UserSerializer(user)
         return Response(serializer.data)
+    
 
 class Logout(APIView):
     def get(self,request):

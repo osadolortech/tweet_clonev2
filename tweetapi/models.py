@@ -4,12 +4,10 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 class ProfileModel(models.Model):
-    first_name = models.CharField(max_length=120,blank=True)
-    last_name = models.CharField(max_length=120,blank=True)
-    owner = models.ForeignKey(User,on_delete=models.CASCADE,related_name='user')
-    bio = models.CharField(max_length=150)
-    location = models.CharField(max_length=60)
-    birth_date = models.DateField(editable=True)
+    owner = models.OneToOneField(User,on_delete=models.CASCADE,related_name='user_profile')
+    bio = models.CharField(max_length=150,null=True)
+    location = models.CharField(max_length=60, null=True)
+    birth_date = models.DateField(editable=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

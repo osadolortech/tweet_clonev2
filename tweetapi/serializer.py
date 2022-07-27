@@ -1,27 +1,28 @@
+from asyncore import write
 from rest_framework import serializers
 from .models import ProfileModel, TweetModel,LikeModel,RetweetModel,CommentModel
 from django.contrib.auth.models import User
 
 
+class ProfileSerilizer(serializers.ModelSerializer):
+    first_name = serializers.PrimaryKeyRelatedField(read_only=True)
+    last_name = serializers.PrimaryKeyRelatedField(read_only=True)
+    class Meta:
+        model = ProfileModel
+        fields = (
+            "id","owner","bio","location","birth_date","first_name","last_name"
+        )
+
 class UserSerializer(serializers.ModelSerializer):
+    user_profile = ProfileSerilizer()
     tweet  = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     comments = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     likes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     retweets = serializers.PrimaryKeyRelatedField(many=True,read_only= True)
-    password = serializers.CharField(required=True,write_only=True)
     class Meta:
         model = User
         fields = (
-            "id","username","password","tweet","comments","retweets","likes"
-        )
-       
-
-class ProfileSerilizer(serializers.ModelSerializer):
-    class Meta:
-
-        model = ProfileModel
-        fields = (
-            "id","owner","first_name","last_name","bio","location","birth_date"
+            "id","tweet","comments","retweets","likes","first_name","last_name","user_profile"
         )
 
 class TweetSerializer(serializers.ModelSerializer):

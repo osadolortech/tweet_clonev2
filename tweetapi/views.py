@@ -20,7 +20,7 @@ class RetreiveUserView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
 
 class CreateEdithProfileView(generics.CreateAPIView):
-    queryset = ProfileModel.objects.all()
+    queryset = ProfileModel.objects.select_related("owner")
     serializer_class = ProfileSerializer
     
     def perform_create(self, serializer):
@@ -41,6 +41,9 @@ class UpdateProfileDetails(generics.RetrieveUpdateAPIView):
 class TweetView(generics.ListCreateAPIView):
     queryset = TweetModel.objects.all()
     serializer_class = TweetSerializer
+    
+    def perform_create(self, serializer):
+        return serializer.save(owner=self.request.user)
 
 class TweetViewDetails(generics.RetrieveDestroyAPIView):
     # i have it here sir

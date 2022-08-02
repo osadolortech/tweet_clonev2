@@ -11,7 +11,7 @@ class Authentication(BaseAuthentication):
         auth_token = auth_data.split(" ")
 
         if len(auth_token) !=2:
-            raise exceptions.AuthenticationFailed("TOKEN NOT VALID")
+            raise exceptions.AuthenticationFailed("Authentication needed to perform operation")
         
         token = auth_token[1]
 

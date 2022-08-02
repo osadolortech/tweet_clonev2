@@ -1,0 +1,1 @@
+web gunicorn blogperm.wsgi:application --log-file -

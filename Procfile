@@ -1,1 +1,1 @@
-web gunicorn blogperm.wsgi:application --log-file -
+web gunicorn twitter_clonev2.wsgi:application --log-file -

@@ -2,6 +2,7 @@
 from pathlib import Path
 from decouple import config
 import dj_database_url
+import django_heroku
 import datetime
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -135,3 +136,5 @@ CORS_ALLOW_CREDENTIALS = True
 
 ACCESS_EXP  = datetime.timedelta(hours=2) + datetime.datetime.utcnow()
 REFRESH_EXP = datetime.timedelta(days=3) + datetime.datetime.utcnow()
+
+django_heroku.settings(locals())

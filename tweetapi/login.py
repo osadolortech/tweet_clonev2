@@ -39,17 +39,20 @@ class Login(CreateAPIView):
                 }
                 access_token = jwt.encode(payload,"secret",algorithm="HS256")
                 refresh_token = jwt.encode(payload2,"secret",algorithm="HS256")
+                user = User.objects.filter(id=payload['id']).first()
+                serializer=UserSerializer(user)
                 response = Response()
                 response.set_cookie(key='refreshToken', value=refresh_token, httponly=True)
                 response.data = {
                     "username":username,
                     'token':access_token,
-                    "refresh_token":refresh_token
+                    "refresh_token":refresh_token,
+                    "user":serializer.data
                 }
                 return response
             else:
                 error = {"Error": status.HTTP_400_BAD_REQUEST,"error_message":"Invalid Username or password"}
-            return Response(error,status=status.HTTP_400_BAD_REQUEST)
+                return Response(error,status=status.HTTP_400_BAD_REQUEST)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
 

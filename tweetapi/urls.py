@@ -1,11 +1,11 @@
 from django.urls import path
-from .views import CreateEdithProfileView,UpdateProfileDetails,RetreiveUserView,TweetView,TweetViewDetails,CommentView,CommentDetails,LikeView,RetweetView,RegistrationView
+from .views import CreateProfile,UpdateProfileDetails,RetreiveUserView,TweetView,TweetViewDetails,CommentView,CommentDetails,LikeView,RetweetView,RegistrationView
 from .login import Login,Logout,ProfileView,ChangePassword,Resetpassword,UserPasswordReset
 urlpatterns=[
 
     # path("user", UserView.as_view(), name="create-user"),
     path("user/<int:pk>", RetreiveUserView.as_view(), name="get-user"),
-    path("create-profile", CreateEdithProfileView.as_view(), name="profile"),
+    path("create-profile", CreateProfile.as_view(), name="profile"),
     path("edith-profile/<int:owner>",UpdateProfileDetails.as_view(), name="profile-details"),
     path("tweet",TweetView.as_view(), name="tweet_view"),
     path("tweet/<int:pk>", TweetViewDetails.as_view(), name="delete-tweet"),

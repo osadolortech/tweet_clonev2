@@ -68,7 +68,7 @@ class ProfileView(APIView):
             return Response({"error": "Authentication failed" }, status=status.HTTP_400_BAD_REQUEST)
         user = User.objects.filter(id=payload['id']).first()
         serializer=UserSerializer(user)
-        return Response(serializer.data)
+        return Response({"user":serializer.data})
     
 
 class Logout(APIView):

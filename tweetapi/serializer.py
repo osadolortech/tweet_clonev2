@@ -28,7 +28,6 @@ class TweetSerializer(serializers.ModelSerializer):
     comments = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     likes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     retweets = serializers.PrimaryKeyRelatedField(many=True,read_only= True)
-    owner = serializers.PrimaryKeyRelatedField(source="owner.username")
     class Meta:
         model = TweetModel
         fields = (

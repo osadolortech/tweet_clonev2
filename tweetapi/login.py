@@ -42,7 +42,7 @@ class Login(CreateAPIView):
                 user = User.objects.filter(id=payload['id']).first()
                 serializer=UserSerializer(user)
                 response = Response()
-                # response(key='refreshToken', value=refresh_token, httponly=True)
+                response.set_cookie(key='refreshToken', value=refresh_token, httponly=True)
                 response.data = {
                     "username":username,
                     'token':access_token,
@@ -59,19 +59,19 @@ class Login(CreateAPIView):
 
 class ProfileView(APIView):
     def get(self,request):
-        user = request.user
-        serializer = UserSerializer(user)
-        return Response({"user":serializer.data})
-        # token = request.COOKIES.get('refreshToken')
-        # if not token:
-        #     return Response({"error": "Authentication failed" }, status=status.HTTP_400_BAD_REQUEST)
-        # try:
-        #     payload = jwt.decode(token, "secret", algorithms="HS256")
-        # except jwt.ExpiredSignatureError:
-        #     return Response({"error": "Authentication failed" }, status=status.HTTP_400_BAD_REQUEST)
-        # user = User.objects.filter(id=payload['id']).first()
-        # serializer=UserSerializer(user)
+        # user = request.user
+        # serializer = UserSerializer(user)
         # return Response({"user":serializer.data})
+        token = request.COOKIES.get('refreshToken')
+        if not token:
+            return Response({"error": "Authentication failed" }, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            payload = jwt.decode(token, "secret", algorithms="HS256")
+        except jwt.ExpiredSignatureError:
+            return Response({"error": "Authentication failed" }, status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.filter(id=payload['id']).first()
+        serializer=UserSerializer(user)
+        return Response({"user":serializer.data})
     
 
 class Logout(APIView):

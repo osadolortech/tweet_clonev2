@@ -16,6 +16,7 @@ class ProfileModel(models.Model):
 
 class TweetModel(models.Model):
     owner = models.ForeignKey(User,on_delete=models.CASCADE, related_name='tweet')
+    name = models.ForeignKey(User,on_delete=models.CASCADE, related_name="name")
     content = models.TextField(max_length=160)
     created_date = models.TimeField(auto_now=True)
 

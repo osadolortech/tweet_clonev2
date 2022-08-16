@@ -20,18 +20,19 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            "id","tweet","comments","retweets","likes","first_name","last_name","user_profile"
+            "id","tweet","comments","retweets","likes","first_name","last_name","user_profile","username"
         )
 
 class TweetSerializer(serializers.ModelSerializer):
-
     comments = serializers.PrimaryKeyRelatedField(many=True,read_only=True)
     likes = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
     retweets = serializers.PrimaryKeyRelatedField(many=True,read_only= True)
+    owner= serializers.ReadOnlyField(read_only=True, source='owner.username')
+    name = serializers.PrimaryKeyRelatedField(read_only=True, source="name.first_name")
     class Meta:
         model = TweetModel
         fields = (
-            "id","owner","content","created_date","comments","likes","retweets","number_of_likes","number_of_retweets"
+            "id","name","owner","content","created_date","comments","likes","retweets","number_of_likes","number_of_retweets"
         )
 
 class CommentSerializer(serializers.ModelSerializer):
